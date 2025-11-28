@@ -14,6 +14,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public void findUserById (String userId){
+
+    }
 
     public User register(UserRegisterDTO body){
         boolean exists = userRepository.findByEmail(body.email()).isPresent();
@@ -24,4 +27,10 @@ public class UserService {
         User newUser = new User(body.name(), body.email(), body.password());
         return userRepository.save(newUser);
     }
+
+    public void deleteUser(String userId) {
+        boolean userExists = userRepository.findById(userId).isPresent();
+
+    }
+
 }
