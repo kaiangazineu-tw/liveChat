@@ -1,0 +1,38 @@
+package com.example.liveChat.infra.security;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.example.liveChat.models.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+@Service
+public class TokenService {
+
+    private final String secret;
+
+    public TokenService(@Value("${JWT_SECRET}") String secret) {
+        this.secret = secret;
+    }
+
+    public String generateToken(User user) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withIssuer("liveChat")
+                    .withSubject(user.getEmail())
+                    .withExpiresAt(genExpirationDate())
+                    .sign(algorithm);
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Erro ao gerar token JWT", exception);
+        }
+    }
+
+    private Instant genExpirationDate() {
+        return Instant.now().plus(2, ChronoUnit.HOURS);
+    }
+}
