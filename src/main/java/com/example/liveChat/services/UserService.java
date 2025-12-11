@@ -1,6 +1,7 @@
 package com.example.liveChat.services;
 
 import com.example.liveChat.dto.UserLoginDTO;
+import com.example.liveChat.dto.UserLoginResponseDTO;
 import com.example.liveChat.dto.UserRegisterDTO;
 import com.example.liveChat.exceptions.UserAlreadyExistsException;
 import com.example.liveChat.exceptions.UserNotFoundException;
@@ -43,7 +44,7 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public String login(UserLoginDTO data) {
+    public UserLoginResponseDTO login(UserLoginDTO data) {
         var user = userRepository.findByEmail(data.email())
                 .orElseThrow(() -> new UserNotFoundException("Invalid email or password"));
 
