@@ -45,4 +45,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponseDTO>> searchUsers(@RequestParam String email){
+        var userFound = userService.searchUsersPartial(email);
+        return ResponseEntity.ok(userFound);
+    }
+
 }

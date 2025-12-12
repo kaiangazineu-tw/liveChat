@@ -3,6 +3,7 @@ package com.example.liveChat.services;
 import com.example.liveChat.dto.UserLoginDTO;
 import com.example.liveChat.dto.UserLoginResponseDTO;
 import com.example.liveChat.dto.UserRegisterDTO;
+import com.example.liveChat.dto.UserResponseDTO;
 import com.example.liveChat.exceptions.UserAlreadyExistsException;
 import com.example.liveChat.exceptions.UserNotFoundException;
 import com.example.liveChat.infra.security.TokenService;
@@ -70,6 +71,13 @@ public class UserService {
             throw new UserNotFoundException("User not found");
         }
         userRepository.deleteById(userId);
+    }
+
+    public List<UserResponseDTO> searchUsersPartial(String partialEmail) {
+        return userRepository.findByEmail(partialEmail)
+                .stream()
+                .map(UserResponseDTO::forRegister)
+                .toList();
     }
 
 }
