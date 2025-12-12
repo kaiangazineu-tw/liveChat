@@ -1,9 +1,12 @@
 package com.example.liveChat.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name= "TB_USER")
+@Getter @Setter
 public class User {
 
     @Id
@@ -20,34 +23,6 @@ public class User {
     }
 
     public User(){
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
 
