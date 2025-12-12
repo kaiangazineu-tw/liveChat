@@ -33,6 +33,11 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found "));
     }
 
+    public User loadUserByUsername(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+    }
+
     @Transactional
     public User register(UserRegisterDTO data){
         if (userRepository.findByEmail(data.email()).isPresent()) {
