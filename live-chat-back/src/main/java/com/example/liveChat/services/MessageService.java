@@ -40,17 +40,20 @@ public class MessageService {
                 savedMessage.getContent(),
                 sender.getId(),
                 sender.getName(),
+                sender.getEmail(),
+                receiver.getId(),
+                receiver.getEmail(),
                 savedMessage.getTimestamp()
         );
 
         messagingTemplate.convertAndSendToUser(
-                String.valueOf(receiver.getId()),
+                String.valueOf(receiver.getEmail()),
                 "/queue/messages",
                 response
         );
 
         messagingTemplate.convertAndSendToUser(
-                String.valueOf(sender.getId()),
+                String.valueOf(sender.getEmail()),
                 "/queue/messages",
                 response
         );
@@ -73,6 +76,9 @@ public class MessageService {
                         m.getContent(),
                         m.getSender().getId(),
                         m.getSender().getName(),
+                        m.getSender().getEmail(),
+                        m.getReceiver().getId(),
+                        m.getReceiver().getEmail(),
                         m.getTimestamp()))
                 .collect(Collectors.toList());
     }

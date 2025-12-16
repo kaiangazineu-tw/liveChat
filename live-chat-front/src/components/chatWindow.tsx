@@ -16,6 +16,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const selectedUserRef = useRef(selectedUser);
+    const currentUserRef = useRef(currentUser);
 
     const scrollToBottom = () => {
         setTimeout(() => {
@@ -25,6 +26,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
 
     useEffect(() => {
         selectedUserRef.current = selectedUser;
+        currentUserRef.current = currentUser;
         
         if (selectedUser) {
             api.get(`/messages/${selectedUser.id}`)
@@ -34,7 +36,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
                 })
                 .catch(err => console.error("Erro ao carregar histórico", err));
         }
-    }, [selectedUser]);
+    }, [selectedUser, currentUser]);
 
     useEffect(() => {
         const token = Cookies.get('chat_token');
@@ -57,21 +59,34 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
                 setMessages(prev => {
                     if (prev.some(m => m.id === receivedMsg.id)) return prev;
 
-                    const currentChatId = String(selectedUserRef.current.id);
-                    const msgSenderId = String(receivedMsg.senderId);
                     const myId = String(currentUser.id);
+                    const myEmail = String(currentUser.email);
 
-                    const isFromCurrentChat = 
-                        msgSenderId === currentChatId || 
-                        (msgSenderId === myId && String(receivedMsg.receiverId) === currentChatId);
+                    const otherId = String(selectedUserRef.current.id);
+                    const otherEmail = String(selectedUserRef.current.email);
 
-                    if (isFromCurrentChat) {
+                    const msgSenderId = String(receivedMsg.senderId);
+                    const msgSenderEmail = String(receivedMsg.senderEmail);
+
+                    const msgReceiverId = String(receivedMsg.receiverId);
+                    const msgReceiverEmail = String(receivedMsg.receiverEmail);
+
+                    const isMyMessageToSelected = 
+                        (msgSenderId === myId || msgSenderEmail === myEmail) && 
+                        (msgReceiverId === otherId || msgReceiverEmail === otherEmail);
+
+                    const isMessageFromSelectedToMe = 
+                        (msgSenderId === otherId || msgSenderEmail === otherEmail) &&
+                        (msgReceiverId === myId || msgReceiverEmail === myEmail);
+
+                    if (isMyMessageToSelected || isMessageFromSelectedToMe) {
                         return [...prev, receivedMsg];
                     }
 
-                    if (msgSenderId !== myId) {
+                    if (msgSenderId !== myId && msgSenderEmail !== myEmail) {
                         toast(`Nova mensagem de ${receivedMsg.senderName}`, { icon: '📩' });
                     }
+                    
                     return prev;
                 });
                 scrollToBottom();

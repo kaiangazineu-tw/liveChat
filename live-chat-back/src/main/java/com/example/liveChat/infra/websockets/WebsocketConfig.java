@@ -64,7 +64,7 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
                             if (userOptional.isPresent()) {
                                 var user = userOptional.get();
                                 UsernamePasswordAuthenticationToken authentication =
-                                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                                        new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities());
                                 accessor.setUser(authentication);
                             }
                         }

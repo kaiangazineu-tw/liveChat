@@ -15,8 +15,10 @@ export interface Message {
     content: string;
     senderId: string;
     senderName: string;
+    senderEmail: string;
     timestamp: string;
     receiverId: string;
+    receiverEmail: string;
 }
 
 export interface ChatWindowProps {

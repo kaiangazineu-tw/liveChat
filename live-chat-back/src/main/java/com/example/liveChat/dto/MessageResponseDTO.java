@@ -7,6 +7,8 @@ public record MessageResponseDTO(
         String content,
         String senderId,
         String senderName,
+        String senderEmail,
+        String receiverId,
+        String receiverEmail,
         LocalDateTime timestamp
-) {
-}
+) {}
