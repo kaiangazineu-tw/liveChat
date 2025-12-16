@@ -11,6 +11,8 @@ import com.example.liveChat.models.User;
 import com.example.liveChat.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,25 @@ public class UserService {
                 .stream()
                 .map(UserResponseDTO::forRegister)
                 .toList();
+    }
+
+    public UserResponseDTO getAuthenticatedUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Usuário não autenticado");
+        }
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                new UsernameNotFoundException("User not found with email: " + email)
+            );
+
+        return new UserResponseDTO(
+            user.getId(),
+            user.getName(),
+            user.getEmail()
+        );
     }
 
 }

@@ -4,10 +4,13 @@ import com.example.liveChat.dto.UserLoginDTO;
 import com.example.liveChat.dto.UserLoginResponseDTO;
 import com.example.liveChat.dto.UserRegisterDTO;
 import com.example.liveChat.dto.UserResponseDTO;
+import com.example.liveChat.models.User;
 import com.example.liveChat.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,4 +54,9 @@ public class UserController {
         return ResponseEntity.ok(userFound);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> me(Authentication authentication) {
+        UserResponseDTO user = userService.getAuthenticatedUser(authentication);
+        return ResponseEntity.ok(user);
+    }
 }

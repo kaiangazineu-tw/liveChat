@@ -9,3 +9,17 @@ export interface FriendRequest {
     requesterName: string;
     requesterId: string;
 }
+
+export interface Message {
+    id: number;
+    content: string;
+    senderId: string;
+    senderName: string;
+    timestamp: string;
+    receiverId: string;
+}
+
+export interface ChatWindowProps {
+    currentUser: User;
+    selectedUser: User;
+}

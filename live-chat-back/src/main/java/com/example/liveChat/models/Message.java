@@ -1,12 +1,17 @@
 package com.example.liveChat.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
-@Entity
-@Table(name= "TB_MESSAGE")
+@Entity @Table(name= "TB_MESSAGE")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class Message {
 
     @Id
@@ -17,41 +22,22 @@ public class Message {
     @JoinColumn(name = "sender_id")
     private User sender;
 
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime timestamp;
 
     private String room = "global";
 
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
+    public Message(User sender, User receiver, String content) {
         this.sender = sender;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+        this.receiver = receiver;
         this.content = content;
+        this.timestamp = LocalDateTime.now();
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
 }

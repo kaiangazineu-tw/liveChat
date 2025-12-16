@@ -8,7 +8,11 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 
-export default function Sidebar() {
+interface SidebarProps {
+    onUserSelected: (user: User) => void;
+}
+
+export default function Sidebar({ onUserSelected }: SidebarProps) {
     const router = useRouter();
 
     const [friends, setFriends] = useState<User[]>([]);
@@ -17,7 +21,7 @@ export default function Sidebar() {
     const [foundUser, setFoundUser] = useState<User | null>(null);
     const [activeTab, setActiveTab] = useState<'friends' | 'requests'>('friends');
     
-    // Implementar o endpoint** /users/me no backend, isso pode dar 404
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [loggedUser, setLoggedUser] = useState<User | null>(null);
 
     const fetchFriends = useCallback(async () => {
@@ -38,24 +42,12 @@ export default function Sidebar() {
         }
     }, []);
 
-    const fetchLoggedUser = useCallback(async () => {
-        try {
-            const res = await api.get('/users/me'); 
-            setLoggedUser(res.data);
-        } catch (error) {
-        }
-    }, []);
-
     const refreshData = useCallback(async () => {
-        await Promise.all([fetchFriends(), fetchRequests(), fetchLoggedUser()]);
-    }, [fetchFriends, fetchRequests, fetchLoggedUser]);
+        await Promise.all([fetchFriends(), fetchRequests()]);
+    }, [fetchFriends, fetchRequests]);
 
-    useEffect(() => {
-        async function loadInitialData() {
-            await refreshData();
-        }
-        loadInitialData();
-    }, []);
+    useEffect(() => { async function loadInitialData() { await refreshData(); } loadInitialData(); }, []);
+
 
     async function handleSearch() {
         if (!emailSearch.trim()) return;
@@ -69,12 +61,8 @@ export default function Sidebar() {
                 params: { email: emailSearch.trim() }
             });
 
-            console.log("Resposta:", res.data);
-
             if (Array.isArray(res.data) && res.data.length > 0) {
-
                 const user = res.data[0]; 
-                
                 setFoundUser(user);
                 toast.success('Usuário encontrado!');
             } else {
@@ -145,10 +133,11 @@ export default function Sidebar() {
     }
 
     function handleLogout() {
-        Cookies.remove('chat_token', { path: '/' });
-        router.push('/');
+        Cookies.remove('chat_token');
+        router.replace('/');
         toast.success('Você saiu do chat.');
     }
+
 
     return (
         <aside className="w-80 bg-gray-900 text-white flex flex-col border-r border-gray-700 h-screen">
@@ -220,6 +209,8 @@ export default function Sidebar() {
                         {friends.map(friend => (
                             <div
                                 key={friend.id}
+                                // 3. APLICAÇÃO DO ONCLICK AQUI
+                                onClick={() => onUserSelected(friend)}
                                 className="p-3 hover:bg-gray-800 rounded cursor-pointer flex items-center gap-3 transition-colors"
                             >
                                 <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center font-bold text-lg text-blue-200">

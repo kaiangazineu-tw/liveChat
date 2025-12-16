@@ -9,12 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.2.1",
     "axios": "^1.13.2",
     "js-cookie": "^3.0.5",
     "next": "16.0.8",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "react-hot-toast": "^2.6.0"
+    "react-hot-toast": "^2.6.0",
+    "sockjs-client": "^1.6.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -22,6 +24,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sockjs-client": "^1.5.4",
+    "@types/stompjs": "^2.3.10",
     "eslint": "^9",
     "eslint-config-next": "16.0.8",
     "tailwindcss": "^4",
