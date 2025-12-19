@@ -104,7 +104,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
             client.deactivate();
         };
      
-    }, [currentUser.id]);
+    }, [currentUser.email, currentUser.id]);
 
     useEffect(() => {
         scrollToBottom();
