@@ -43,7 +43,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
         if (!token) return;
 
         const client = new Client({
-            brokerURL: process.env.BROKER_URL ?? 'ws://localhost:8080/ws',
+            brokerURL: process.env.NEXT_PUBLIC_BROKER_URL,
             connectHeaders: {
                 Authorization: `Bearer ${token}`,
             },
@@ -121,16 +121,7 @@ export default function ChatWindow({ currentUser, selectedUser }: ChatWindowProp
             content: newMessage
         };
 
-        const opmisticMessage: Message = {
-            id: Date.now(),
-            senderId: String(currentUser.id),
-            receiverId: selectedUser.id,
-            content: newMessage,
-            timestamp: timestamp,
-            senderName: currentUser.name || 'Eu'
-        } as Message;
-
-        setMessages(prev => [...prev, opmisticMessage]);
+        setMessages(prev => [...prev]);
         setNewMessage("");
 
 
